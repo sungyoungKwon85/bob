@@ -1,7 +1,9 @@
 package com.skplanet.bob.repository
 
 import com.skplanet.bob.model.Restaurant
+import org.springframework.data.geo.Box
 import org.springframework.data.geo.Circle
+import org.springframework.data.geo.Point
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.findById
 import org.springframework.data.mongodb.core.query.Criteria
@@ -123,12 +125,19 @@ class RestaurantRepository(private val template: ReactiveMongoTemplate) {
 
     fun create(restaurant: Mono<Restaurant>) = template.save(restaurant)
     fun findById(id: String) = template.findById<Restaurant>(id)
-    //    fun findAllByCoordinates(lon: Double, lat: Double, distance: Int) = template.findAll<Restaurant>()
-    fun findAllByCoordinates(latitude: Double, longitude: Double, distance: Double): Mono<Long> {
+    fun getCountGeoWithin(latitude: Double, longitude: Double, distance: Double): Mono<Long> {
         val query = Query()
         val circle = Circle(latitude, longitude, distance / 6378.1)
         query.addCriteria(Criteria.where("location").`withinSphere`(circle))
         return template.count(query, "Restaurants")
     }
+
+    fun getCountGeoWithinBySquare(bl: Point, tr: Point): Mono<Long> {
+        val query = Query()
+        val box = Box(bl, tr)
+        query.addCriteria(Criteria.where("location").`within`(box))
+        return template.count(query, "Restaurants")
+    }
+
 }
 

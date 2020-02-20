@@ -23,7 +23,7 @@ class RestaurantHandler(val restaurantService: RestaurantService) {
                         created(URI.create("/functional/restaurant/${it.id}")).build()
                     }
 
-    fun getWithin(serverRequest: ServerRequest) = restaurantService.getRestaurantsWithin(
+    fun getCountGeoWithin(serverRequest: ServerRequest) = restaurantService.getCountGeoWithin(
             serverRequest.pathVariable("lon").toDouble()
             , serverRequest.pathVariable("lat").toDouble()
             , serverRequest.pathVariable("distance").toDouble())

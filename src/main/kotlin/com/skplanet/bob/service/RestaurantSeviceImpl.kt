@@ -16,6 +16,6 @@ class RestaurantSeviceImpl : RestaurantService {
 
     override fun createRestaurant(restaurant: Mono<Restaurant>): Mono<Restaurant> = restaurantRepository.create(restaurant)
 
-    override fun getRestaurantsWithin(lon: Double, lat: Double, distance: Double): Mono<Long> = restaurantRepository.findAllByCoordinates(lon, lat, distance)
+    override fun getCountGeoWithin(lon: Double, lat: Double, distance: Double): Mono<Long> = restaurantRepository.getCountGeoWithin(lon, lat, distance)
 
 }
