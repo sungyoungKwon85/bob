@@ -10,8 +10,7 @@ data class Restaurant(
         var name: String = "",
         var type: String? = "RESTAURANT",
         var address: Address? = null,
-        var latitude: Double = 0.0,
-        var longitude: Double = 0.0,
+        var location: Location? = null,
         var phone: String = "",
         var schedule: Schedule? = null,
         var government: Government? = null,
@@ -26,6 +25,11 @@ data class Restaurant(
             var zipcode: String = "",
             var asRoad: String = "",
             var asArea: String = ""
+    )
+
+    data class Location(
+            var type: String = "",
+            var coordinates: List<Double>? = null
     )
 
     data class Schedule(

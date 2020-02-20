@@ -10,9 +10,12 @@ import reactor.core.publisher.Mono
 class RestaurantSeviceImpl : RestaurantService {
 
     @Autowired
-    lateinit var restaurantRepository: RestaurantRepository;
+    lateinit var restaurantRepository: RestaurantRepository
 
-    override fun getRestaurant(id: String): Mono<Restaurant> = restaurantRepository.findById(id);
+    override fun getRestaurant(id: String): Mono<Restaurant> = restaurantRepository.findById(id)
 
     override fun createRestaurant(restaurant: Mono<Restaurant>): Mono<Restaurant> = restaurantRepository.create(restaurant)
+
+    override fun getRestaurantsWithin(lon: Double, lat: Double, distance: Double): Mono<Long> = restaurantRepository.findAllByCoordinates(lon, lat, distance)
+
 }

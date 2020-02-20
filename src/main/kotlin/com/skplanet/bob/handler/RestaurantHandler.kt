@@ -22,4 +22,12 @@ class RestaurantHandler(val restaurantService: RestaurantService) {
                     .flatMap {
                         created(URI.create("/functional/restaurant/${it.id}")).build()
                     }
+
+    fun getWithin(serverRequest: ServerRequest) = restaurantService.getRestaurantsWithin(
+            serverRequest.pathVariable("lon").toDouble()
+            , serverRequest.pathVariable("lat").toDouble()
+            , serverRequest.pathVariable("distance").toDouble())
+            .flatMap { ok().body(fromObject(it)) }
+            .switchIfEmpty(status(HttpStatus.NOT_FOUND).build())
+
 }
