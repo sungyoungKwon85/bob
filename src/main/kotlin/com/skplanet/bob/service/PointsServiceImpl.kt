@@ -22,10 +22,10 @@ class PointsServiceImpl : PointsService {
             for (j in 0..2) {
                 val blLat: Double = latBl + latValue * i
                 val blLon: Double = lonBl + lonValue * j
-                val bl = Point(blLat, blLon)
+                val bl = Point(blLon, blLat)
                 val trLat = latBl + latValue * (i + 1)
                 val trLon = lonBl + lonValue * (j + 1)
-                val tr = Point(trLat, trLon)
+                val tr = Point(trLon, trLat)
                 val count = restaurantRepository.getCountGeoWithinBySquare(bl, tr).awaitFirst()
                 if (count > 0) {
                     totalCount += count
