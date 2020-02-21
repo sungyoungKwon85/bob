@@ -1,9 +1,8 @@
 package com.skplanet.bob.service
 
 import com.skplanet.bob.api.model.PointsResponse
-import com.skplanet.bob.repository.PointsRepository
 import com.skplanet.bob.repository.RestaurantRepository
-import kotlinx.coroutines.reactive.awaitFirstOrNull
+import kotlinx.coroutines.reactive.awaitFirst
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.geo.Point
 import org.springframework.stereotype.Service
@@ -11,8 +10,6 @@ import reactor.core.publisher.Mono
 
 @Service
 class PointsServiceImpl : PointsService {
-    @Autowired
-    lateinit var pointsRepository: PointsRepository
     @Autowired
     lateinit var restaurantRepository: RestaurantRepository
 
@@ -29,10 +26,12 @@ class PointsServiceImpl : PointsService {
                 val trLat = latBl + latValue * (i + 1)
                 val trLon = lonBl + lonValue * (j + 1)
                 val tr = Point(trLat, trLon)
-                val count = restaurantRepository.getCountGeoWithinBySquare(bl, tr).awaitFirstOrNull()!!
-                totalCount += count
-                result.points.add(
-                        PointsResponse.Point((blLat + trLat) / 2, (blLon + trLon) / 2, count))
+                val count = restaurantRepository.getCountGeoWithinBySquare(bl, tr).awaitFirst()
+                if (count > 0) {
+                    totalCount += count
+                    result.points.add(
+                            PointsResponse.Point((blLat + trLat) / 2, (blLon + trLon) / 2, count))
+                }
             }
         }
         result.totalCount = totalCount

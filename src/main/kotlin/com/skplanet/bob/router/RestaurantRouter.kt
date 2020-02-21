@@ -14,7 +14,6 @@ class RestaurantRouter(private val restaurantHandler: RestaurantHandler) {
             GET("/{id}", restaurantHandler::get)
             POST("/", restaurantHandler::create)
             GET("/{lon}/{lat}/{distance}", restaurantHandler::getCountGeoWithin)
-            GET("/{lon}/{lat}/{distance}", restaurantHandler::getCountGeoWithin)
         }
     }
 }
