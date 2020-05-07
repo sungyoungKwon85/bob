@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.findById
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Repository
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 
@@ -130,6 +131,13 @@ class RestaurantRepository(private val template: ReactiveMongoTemplate) {
         val circle = Circle(latitude, longitude, distance / 6378.1)
         query.addCriteria(Criteria.where("location").`withinSphere`(circle))
         return template.count(query, "Restaurants")
+    }
+
+    fun getGeoWithinBySquare(bl: Point, tr: Point): Flux<Restaurant> {
+        val query = Query()
+        val box = Box(bl, tr)
+        query.addCriteria(Criteria.where("location").`within`(box))
+        return template.find(query, Restaurant::class.java)
     }
 
     fun getCountGeoWithinBySquare(bl: Point, tr: Point): Mono<Long> {

@@ -14,10 +14,10 @@ class PointsServiceImpl : PointsService {
     lateinit var restaurantRepository: RestaurantRepository
 
     override suspend fun getPointsByRange(latBl: Double, lonBl: Double, latTr: Double, lonTr: Double, level: Int): Mono<PointsResponse> {
-        var result = PointsResponse()
-        var latValue: Double = (latTr - latBl) / 3;
-        var lonValue: Double = (lonTr - lonBl) / 3;
-        var totalCount: Long = 0;
+        val result = PointsResponse()
+        val latValue: Double = (latTr - latBl) / 3
+        val lonValue: Double = (lonTr - lonBl) / 3
+        var totalCount: Long = 0
         for (i in 0..2) {
             for (j in 0..2) {
                 val blLat: Double = latBl + latValue * i
