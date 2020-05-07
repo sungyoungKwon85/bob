@@ -10,7 +10,6 @@ import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.*
 import org.springframework.web.reactive.function.server.bodyToMono
-import reactor.core.publisher.Mono
 import java.net.URI
 
 @Component
@@ -35,13 +34,17 @@ class RestaurantHandler(val restaurantService: RestaurantService) {
                 val lon = serverRequest.queryParam("lon").get().toDouble()
                 val lat = serverRequest.queryParam("lat").get().toDouble()
                 val level = serverRequest.queryParam("level").get().toInt()
-                restaurantService.searchPoint(lon, lat, level)
+                restaurantService.searchRestaurants(lon, lat, level)
                         .flatMap { ok().body(BodyInserters.fromValue(it)) }
                         .switchIfEmpty(status(HttpStatus.NOT_FOUND).build())
                         .awaitFirst()
             }
             else -> {
-                Mono.just(RestaurantsResponse())
+                restaurantService.searchRestaurants(
+                        serverRequest.queryParam("lat_bl").get().toDouble(),
+                        serverRequest.queryParam("lon_bl").get().toDouble(),
+                        serverRequest.queryParam("lat_tr").get().toDouble(),
+                        serverRequest.queryParam("lon_tr").get().toDouble())
                         .flatMap { ok().body(BodyInserters.fromValue(it)) }
                         .switchIfEmpty(status(HttpStatus.NOT_FOUND).build())
                         .awaitFirst()
