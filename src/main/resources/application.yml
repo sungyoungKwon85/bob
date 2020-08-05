@@ -4,3 +4,11 @@ spring:
       uri: "mongodb://172.21.115.89:27017"
       database: "test"
 spring.jackson.default-property-inclusion: NON_NULL
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              ReactiveMongoTemplate: DEBUG

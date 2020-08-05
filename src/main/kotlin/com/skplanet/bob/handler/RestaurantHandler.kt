@@ -1,6 +1,5 @@
 package com.skplanet.bob.handler
 
-import com.skplanet.bob.api.model.RestaurantsResponse
 import com.skplanet.bob.service.RestaurantService
 import kotlinx.coroutines.reactive.awaitFirst
 import org.springframework.http.HttpStatus

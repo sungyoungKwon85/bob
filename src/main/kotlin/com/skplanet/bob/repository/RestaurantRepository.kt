@@ -126,6 +126,12 @@ class RestaurantRepository(private val template: ReactiveMongoTemplate) {
 
     fun create(restaurant: Mono<Restaurant>) = template.save(restaurant)
     fun findById(id: String) = template.findById<Restaurant>(id)
+    fun findByName(name: String): Mono<Restaurant> {
+        val query = Query()
+        query.addCriteria(Criteria.where("name").`is`(name))
+        return template.findOne(query, Restaurant::class.java)
+    }
+
     fun getCountGeoWithin(latitude: Double, longitude: Double, distance: Double): Mono<Long> {
         val query = Query()
         val circle = Circle(latitude, longitude, distance / 6378.1)
