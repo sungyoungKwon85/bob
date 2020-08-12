@@ -12,3 +12,10 @@ logging:
           mongodb:
             core:
               ReactiveMongoTemplate: DEBUG
+    reactor:
+      netty:
+        http:
+          client: DEBUG
+naver:
+  clientId: mv9agrezdc
+  clientSecret: UyLTTU63LAddxCB3LPUJqAaAv60xrLJBw7vvYXJb

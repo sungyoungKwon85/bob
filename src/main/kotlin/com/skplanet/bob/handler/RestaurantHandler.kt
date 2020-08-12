@@ -1,5 +1,7 @@
 package com.skplanet.bob.handler
 
+import com.skplanet.bob.service.AdministrativeAreaService
+import com.skplanet.bob.service.NaverCloudPlatformService
 import com.skplanet.bob.service.RestaurantService
 import kotlinx.coroutines.reactive.awaitFirst
 import org.springframework.http.HttpStatus
@@ -12,7 +14,9 @@ import org.springframework.web.reactive.function.server.bodyToMono
 import java.net.URI
 
 @Component
-class RestaurantHandler(val restaurantService: RestaurantService) {
+class RestaurantHandler(
+        val restaurantService: RestaurantService
+) {
 
     fun get(serverRequest: ServerRequest) =
             restaurantService.getRestaurant(serverRequest.pathVariable("id"))
@@ -26,9 +30,8 @@ class RestaurantHandler(val restaurantService: RestaurantService) {
                     }
 
     suspend fun getList(serverRequest: ServerRequest): ServerResponse {
-        val type = serverRequest.queryParam("type").orElse("")
 
-        return when (type) {
+        return when (serverRequest.queryParam("type").orElse("")) {
             "point" -> {
                 val lon = serverRequest.queryParam("lon").get().toDouble()
                 val lat = serverRequest.queryParam("lat").get().toDouble()

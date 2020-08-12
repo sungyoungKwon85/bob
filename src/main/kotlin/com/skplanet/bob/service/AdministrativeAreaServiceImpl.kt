@@ -1,6 +1,7 @@
 package com.skplanet.bob.service
 
 import com.skplanet.bob.api.model.AdministrativeAreaResponse
+import com.skplanet.bob.model.AdministrativeArea
 import com.skplanet.bob.repository.AdministrativeAreaRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -40,5 +41,9 @@ class AdministrativeAreaServiceImpl : AdministrativeAreaService {
             result.count++
         }
         return Mono.just(result)
+    }
+
+    override fun getByUmdId(umdId: String): Mono<AdministrativeArea> {
+        return administrativeAreaRepository.findByUmdId(umdId)
     }
 }

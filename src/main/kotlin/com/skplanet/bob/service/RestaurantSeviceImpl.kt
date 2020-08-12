@@ -30,17 +30,14 @@ class RestaurantSeviceImpl : RestaurantService {
         val bl = Point(blLon, blLat)
 
         val trLon: Double = lon + lonSize
-        val trLat:Double = lat + latSize
+        val trLat: Double = lat + latSize
         val tr = Point(trLon, trLat)
-        val restaurants: Flux<Restaurant> = restaurantRepository.getGeoWithinBySquare(bl, tr)
-
         val result = RestaurantsResponse()
-        restaurants.subscribe() {
-            result.count++
-            result.restaurants.add(it)
-        }
-
-        return Mono.just(result)
+        return restaurantRepository.getGeoWithinBySquare(bl, tr)
+                .doOnNext {
+                    result.count++
+                    result.restaurants.add(it)
+                }.then(Mono.just(result))
     }
 
     override suspend fun searchRestaurants(latBl: Double, lonBl: Double, latTr: Double, lonTr: Double): Mono<RestaurantsResponse> {
@@ -48,6 +45,7 @@ class RestaurantSeviceImpl : RestaurantService {
         val latValue: Double = (latTr - latBl) / 3
         val lonValue: Double = (lonTr - lonBl) / 3
 
+        // todo async.. occurs empty result
         for (i in 0..2) {
             for (j in 0..2) {
                 val blLat: Double = latBl + latValue * i

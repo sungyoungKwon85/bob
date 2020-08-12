@@ -5,4 +5,5 @@ import reactor.core.publisher.Mono
 
 interface PointsService {
     suspend fun getPointsByRange(latBl: Double, lonBl: Double, latTr: Double, lonTr: Double, level: Int): Mono<PointsResponse>
+    suspend fun getPointsByCenter(x: Double, y: Double): Mono<PointsResponse>
 }

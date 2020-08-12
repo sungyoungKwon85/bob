@@ -17,4 +17,12 @@ internal class AdministrativeAreaRepositoryTest {
                 .expectNextCount(17)
                 .verifyComplete()
     }
+
+    @Test
+    fun `findByUmdId`() {
+        val findByUmdId = administrativeAreaRepository.findByUmdId("1116067")
+        StepVerifier.create(findByUmdId)
+                .expectNextMatches { it.name == "발산1동" }
+                .verifyComplete()
+    }
 }

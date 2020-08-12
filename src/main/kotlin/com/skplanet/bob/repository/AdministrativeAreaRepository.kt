@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 @Repository
 class AdministrativeAreaRepository(private val template: ReactiveMongoTemplate) {
@@ -25,5 +26,11 @@ class AdministrativeAreaRepository(private val template: ReactiveMongoTemplate) 
         val query = Query()
         query.addCriteria(Criteria.where("type").`is`(type).and("sggId").`is`(sggId))
         return template.find(query, AdministrativeArea::class.java)
+    }
+
+    fun findByUmdId(umdId: String): Mono<AdministrativeArea> {
+        val query = Query()
+        query.addCriteria(Criteria.where("type").`is`("umd").and("id").`is`(umdId))
+        return template.findOne(query, AdministrativeArea::class.java)
     }
 }

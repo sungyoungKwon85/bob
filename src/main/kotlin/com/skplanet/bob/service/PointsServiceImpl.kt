@@ -37,4 +37,8 @@ class PointsServiceImpl : PointsService {
         result.totalCount = totalCount
         return Mono.just(result)
     }
+
+    override suspend fun getPointsByCenter(x: Double, y: Double): Mono<PointsResponse> {
+        TODO("Not yet implemented")
+    }
 }
