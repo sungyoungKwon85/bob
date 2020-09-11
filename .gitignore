@@ -32,6 +32,6 @@ out/
 .vscode/
 /.idea/
 /.gradle/
-/gradle/
-/gradlew.bat
-/gradlew
+#/gradle/
+#/gradlew.bat
+#/gradlew
