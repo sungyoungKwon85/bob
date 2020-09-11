@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.server.router
 class ProfileRouter(private val profileHandler: ProfileHandler) {
 
     @Bean
-    fun pointsRoutes() = router {
+    fun profileRoutes() = router {
         "/profile".nest {
             GET("/", profileHandler::profile)
         }
