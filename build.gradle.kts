@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.skplanet"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1-SNAPSHOT-"+new Date().format("yyyyMMddHHmmss")
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 val developmentOnly by configurations.creating
