@@ -41,7 +41,7 @@ deploy:
     key: bob.zip
     bundle_type: zip
     application: bob
-    deployment_group: bob
+    deployment_group: bob-group
     region: ap-northeast-2
     wait-until-deployed: true
 
