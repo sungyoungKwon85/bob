@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
+import javax.annotation.PostConstruct
 
 @Repository
 class RestaurantRepository(private val template: ReactiveMongoTemplate) {
@@ -120,7 +121,7 @@ class RestaurantRepository(private val template: ReactiveMongoTemplate) {
         )
     }
 
-    //    @PostConstruct
+//    @PostConstruct
     fun init() =
             initRestaurants.map(Restaurant::toMono).map(this::create).map(Mono<Restaurant>::subscribe)
 
