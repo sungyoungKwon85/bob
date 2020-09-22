@@ -10,7 +10,7 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @Service
-class RestaurantSeviceImpl : RestaurantService {
+class RestaurantServiceImpl : RestaurantService {
 
     @Autowired
     lateinit var restaurantRepository: RestaurantRepository

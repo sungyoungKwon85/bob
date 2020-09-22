@@ -4,24 +4,23 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-@Document(collection = "Restaurants")
+@Document(collection = "restaurant")
 data class Restaurant(
         var id: String?,
         var name: String = "",
-        var type: String? = "RESTAURANT",
+        var type: String? = "00",
         var address: Address? = null,
         var location: Location? = null,
         var phone: String = "",
         var schedule: Schedule? = null,
-        var government: Government? = null,
         var updatedAt: LocalDateTime? = null,
-        var registrationType: String = "NULLBOB",
-        var status: String = "OPEN"
+        var registrationType: String = "UNBOB",
+        var status: String = "CLOSED"
 
 ) {
     data class Address(
-            var state: String = "",
-            var city: String = "",
+            var sg: String = "",
+            var sgg: String = "",
             var zipcode: String = "",
             var asRoad: String = "",
             var asArea: String = ""
@@ -33,15 +32,14 @@ data class Restaurant(
     )
 
     data class Schedule(
-            var open_at: LocalTime? = null,
-            var close_at: LocalTime? = null
-    )
-
-    data class Government(
-            var name: String = "",
-            var source: String = "",
-            var phone: String = "",
-            var code: String = ""
+            var weekdayStartAt: LocalTime? = null,
+            var weekdayEndAt: LocalTime? = null,
+            var saturdayStartAt: LocalTime? = null,
+            var saturdayEndAt: LocalTime? = null,
+            var holidayStartAt: LocalTime? = null,
+            var holidayEndAt: LocalTime? = null,
+            var deliveryStartAt: LocalTime? = null,
+            var deliveryEndAt: LocalTime? = null
     )
 }
 
