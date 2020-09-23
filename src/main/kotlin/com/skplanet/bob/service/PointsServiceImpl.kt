@@ -38,7 +38,11 @@ class PointsServiceImpl : PointsService {
         return Mono.just(result)
     }
 
-    override suspend fun getPointsByCenter(x: Double, y: Double): Mono<PointsResponse> {
-        TODO("Not yet implemented")
+    override suspend fun getPointsByCenter(lat: Double, lon: Double): Mono<PointsResponse> {
+        var respone = PointsResponse()
+        respone.totalCount = restaurantRepository.getCountGeoWithin(lat, lon, 3.0).awaitFirst()
+        respone.points.add(PointsResponse.Point(lat, lon, respone.totalCount))
+
+        return Mono.justOrEmpty(respone)
     }
 }

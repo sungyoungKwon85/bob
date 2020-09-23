@@ -1,5 +1,6 @@
 package com.skplanet.bob.handler
 
+import com.skplanet.bob.model.AdministrativeArea
 import com.skplanet.bob.service.AdministrativeAreaService
 import com.skplanet.bob.service.NaverCloudPlatformService
 import com.skplanet.bob.service.PointsService
@@ -19,14 +20,15 @@ class PointsHandler(
         val administrativeAreaService: AdministrativeAreaService,
         val naverCloudPlatformService: NaverCloudPlatformService
 ) {
-    suspend fun getPointsByRange(serverRequest: ServerRequest): ServerResponse {
+    suspend fun getPointsBy(serverRequest: ServerRequest): ServerResponse {
         return when (serverRequest.queryParam("type").orElse("")) {
             "area" -> {
-                val umdName = serverRequest.queryParam("umdName").get()
-                val geocode = naverCloudPlatformService.geocode(umdName)
+                val umdId = serverRequest.queryParam("umdId").get()
+                val area: AdministrativeArea = administrativeAreaService.getByUmdId(umdId).awaitFirst()
+                val geocode = naverCloudPlatformService.geocode(area.sggName+area.name)
                 pointsService.getPointsByCenter(
                         geocode?.addresses!![0].x.toDouble(), geocode?.addresses!![0].y.toDouble())
-                        .flatMap { ok().body(BodyInserters.fromValue(it)) }
+                        .flatMap { ok().body(fromValue(it)) }
                         .switchIfEmpty(status(HttpStatus.NOT_FOUND).build())
                         .awaitFirst()
             }

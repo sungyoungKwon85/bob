@@ -11,7 +11,7 @@ class PointsRouter(private val pointsHandler: PointsHandler) {
     @Bean
     fun pointsRoutes() = coRouter {
         "/points".nest {
-            GET("/range", pointsHandler::getPointsByRange)
+            GET("/", pointsHandler::getPointsBy)
         }
     }
 
