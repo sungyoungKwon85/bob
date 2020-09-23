@@ -10,7 +10,9 @@ logging:
     reactor:
       netty:
         http:
-          client: DEBUG
+          client:
+            HttpClient: DEBUG
+
 naver:
   clientId: mv9agrezdc
   clientSecret: UyLTTU63LAddxCB3LPUJqAaAv60xrLJBw7vvYXJb
