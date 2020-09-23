@@ -4,6 +4,7 @@ import com.skplanet.bob.api.model.RestaurantsResponse
 import com.skplanet.bob.model.Restaurant
 import com.skplanet.bob.repository.RestaurantRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.data.geo.Point
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
@@ -21,7 +22,7 @@ class RestaurantServiceImpl : RestaurantService {
 
     override fun getCountGeoWithin(lon: Double, lat: Double, distance: Double): Mono<Long> = restaurantRepository.getCountGeoWithin(lon, lat, distance)
 
-    override suspend fun searchRestaurants(lon: Double, lat: Double, level: Int): Mono<RestaurantsResponse> {
+    override suspend fun searchRestaurants(lon: Double, lat: Double, level: Int, pageable: Pageable): Mono<RestaurantsResponse> {
         val lonSize: Double = 0.5 * level
         val latSize: Double = 0.5 * level
 
@@ -33,14 +34,14 @@ class RestaurantServiceImpl : RestaurantService {
         val trLat: Double = lat + latSize
         val tr = Point(trLon, trLat)
         val result = RestaurantsResponse()
-        return restaurantRepository.getGeoWithinBySquare(bl, tr)
+        return restaurantRepository.getGeoWithinBySquare(bl, tr, pageable)
                 .doOnNext {
                     result.count++
                     result.restaurants.add(it)
                 }.then(Mono.just(result))
     }
 
-    override suspend fun searchRestaurants(latBl: Double, lonBl: Double, latTr: Double, lonTr: Double): Mono<RestaurantsResponse> {
+    override suspend fun searchRestaurants(latBl: Double, lonBl: Double, latTr: Double, lonTr: Double, pageable: Pageable): Mono<RestaurantsResponse> {
         val result = RestaurantsResponse()
         val latValue: Double = (latTr - latBl) / 3
         val lonValue: Double = (lonTr - lonBl) / 3
@@ -54,7 +55,7 @@ class RestaurantServiceImpl : RestaurantService {
                 val trLat = latBl + latValue * (i + 1)
                 val trLon = lonBl + lonValue * (j + 1)
                 val tr = Point(trLon, trLat)
-                val restaurants = restaurantRepository.getGeoWithinBySquare(bl, tr)
+                val restaurants = restaurantRepository.getGeoWithinBySquare(bl, tr, pageable)
                 restaurants.subscribe() {
                     result.count++
                     result.restaurants.add(it)

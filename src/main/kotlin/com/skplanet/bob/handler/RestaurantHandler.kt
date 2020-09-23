@@ -1,9 +1,8 @@
 package com.skplanet.bob.handler
 
-import com.skplanet.bob.service.AdministrativeAreaService
-import com.skplanet.bob.service.NaverCloudPlatformService
 import com.skplanet.bob.service.RestaurantService
 import kotlinx.coroutines.reactive.awaitFirst
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyInserters
@@ -30,13 +29,20 @@ class RestaurantHandler(
                     }
 
     suspend fun getList(serverRequest: ServerRequest): ServerResponse {
+        val page = if (serverRequest.queryParam("page").isPresent)
+            serverRequest.queryParam("page").get().toInt()
+        else 0
+        val size = if (serverRequest.queryParam("size").isPresent)
+            serverRequest.queryParam("size").get().toInt()
+        else 10
 
         return when (serverRequest.queryParam("type").orElse("")) {
             "point" -> {
                 val lon = serverRequest.queryParam("lon").get().toDouble()
                 val lat = serverRequest.queryParam("lat").get().toDouble()
                 val level = serverRequest.queryParam("level").get().toInt()
-                restaurantService.searchRestaurants(lon, lat, level)
+
+                restaurantService.searchRestaurants(lon, lat, level, PageRequest.of(page, size))
                         .flatMap { ok().body(BodyInserters.fromValue(it)) }
                         .switchIfEmpty(status(HttpStatus.NOT_FOUND).build())
                         .awaitFirst()
@@ -46,7 +52,8 @@ class RestaurantHandler(
                         serverRequest.queryParam("lat_bl").get().toDouble(),
                         serverRequest.queryParam("lon_bl").get().toDouble(),
                         serverRequest.queryParam("lat_tr").get().toDouble(),
-                        serverRequest.queryParam("lon_tr").get().toDouble())
+                        serverRequest.queryParam("lon_tr").get().toDouble(),
+                        PageRequest.of(page, size))
                         .flatMap { ok().body(BodyInserters.fromValue(it)) }
                         .switchIfEmpty(status(HttpStatus.NOT_FOUND).build())
                         .awaitFirst()
@@ -56,9 +63,7 @@ class RestaurantHandler(
     }
 
     fun getCountGeoWithin(serverRequest: ServerRequest) = restaurantService.getCountGeoWithin(
-            serverRequest.pathVariable("lon").toDouble()
-            , serverRequest.pathVariable("lat").toDouble()
-            , serverRequest.pathVariable("distance").toDouble())
+            serverRequest.pathVariable("lon").toDouble(), serverRequest.pathVariable("lat").toDouble(), serverRequest.pathVariable("distance").toDouble())
             .flatMap { ok().body(BodyInserters.fromValue(it)) }
             .switchIfEmpty(status(HttpStatus.NOT_FOUND).build())
 

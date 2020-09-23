@@ -5,3 +5,4 @@ spring:
       database: "test"
 server:
   port: 8084
+
