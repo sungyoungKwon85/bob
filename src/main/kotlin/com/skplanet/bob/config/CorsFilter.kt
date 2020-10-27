@@ -22,6 +22,7 @@ class CorsFilter {
         val source = UrlBasedCorsConfigurationSource().apply {
             registerCorsConfiguration("/**", config)
         }
+
         return CorsWebFilter(source)
     }
 }
