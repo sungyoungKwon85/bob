@@ -16,31 +16,30 @@ class AdministrativeAreaServiceImpl : AdministrativeAreaService {
     override fun getSds(): Mono<AdministrativeAreaResponse> {
         val result = AdministrativeAreaResponse()
         val findByType = administrativeAreaRepository.findByType("sd")
-        findByType.subscribe {
+
+        return findByType.doOnNext {
             result.areas.add(it)
             result.count++
-        }
-        return Mono.just(result)
+        }.then(Mono.just(result))
     }
 
     override fun getSggs(sdId: String): Mono<AdministrativeAreaResponse> {
         val result = AdministrativeAreaResponse()
         val findByTypeAndSdId = administrativeAreaRepository.findByTypeAndSdId("sgg", sdId)
-        findByTypeAndSdId.subscribe {
+
+        return findByTypeAndSdId.doOnNext {
             result.areas.add(it)
             result.count++
-        }
-        return Mono.just(result)
+        }.then(Mono.just(result))
     }
 
     override fun getUmds(sggId: String): Mono<AdministrativeAreaResponse> {
         val result = AdministrativeAreaResponse()
         val findByTypeAndSggId = administrativeAreaRepository.findByTypeAndSggId("umd", sggId)
-        findByTypeAndSggId.subscribe {
+        return findByTypeAndSggId.doOnNext {
             result.areas.add(it)
             result.count++
-        }
-        return Mono.just(result)
+        }.then(Mono.just(result))
     }
 
     override fun getByUmdId(umdId: String): Mono<AdministrativeArea> {
