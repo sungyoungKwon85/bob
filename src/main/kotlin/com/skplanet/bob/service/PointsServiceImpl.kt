@@ -38,6 +38,9 @@ class PointsServiceImpl : PointsService {
         return Mono.just(result)
     }
 
+    // todo
+    // 읍면동 지역의 중심좌표는 알 수 있으나 범위를 알 수가 없다
+    // 중심좌표를 주면 클라에서 그려서 범위 api를 주도록?
     override suspend fun getPointsByCenter(lat: Double, lon: Double): Mono<PointsResponse> {
         var respone = PointsResponse()
         respone.totalCount = restaurantRepository.getCountGeoWithin(lat, lon, 3.0).awaitFirst()
