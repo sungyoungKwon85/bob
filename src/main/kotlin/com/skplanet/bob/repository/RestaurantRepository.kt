@@ -30,7 +30,7 @@ class RestaurantRepository(private val template: ReactiveMongoTemplate) {
 
     fun getCountGeoWithin(latitude: Double, longitude: Double, distance: Double): Mono<Long> {
         val query = Query()
-        val circle = Circle(latitude, longitude, distance / 6378.1)
+        val circle = Circle(longitude, latitude, distance / 6378.1)
         query.addCriteria(Criteria.where("location").`withinSphere`(circle))
         return template.count(query, "restaurant")
     }

@@ -27,7 +27,7 @@ class PointsHandler(
                 val area: AdministrativeArea = administrativeAreaService.getByUmdId(umdId).awaitFirst()
                 val geocode = naverCloudPlatformService.geocode(area.sggName+area.name)
                 pointsService.getPointsByCenter(
-                        geocode?.addresses!![0].x.toDouble(), geocode?.addresses!![0].y.toDouble())
+                        geocode?.addresses!![0].y.toDouble(), geocode?.addresses!![0].x.toDouble())
                         .flatMap { ok().body(fromValue(it)) }
                         .switchIfEmpty(status(HttpStatus.NOT_FOUND).build())
                         .awaitFirst()

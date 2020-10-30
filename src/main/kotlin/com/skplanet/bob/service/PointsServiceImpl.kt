@@ -43,9 +43,9 @@ class PointsServiceImpl : PointsService {
     // 중심좌표를 주면 클라에서 그려서 범위 api를 주도록?
     override suspend fun getPointsByCenter(lat: Double, lon: Double): Mono<PointsResponse> {
         var respone = PointsResponse()
-        respone.totalCount = restaurantRepository.getCountGeoWithin(lat, lon, 3.0).awaitFirst()
-        respone.points.add(PointsResponse.Point(lat, lon, respone.totalCount))
-
-        return Mono.justOrEmpty(respone)
+        return restaurantRepository.getCountGeoWithin(lat, lon, 3.0).doOnNext {
+            respone.totalCount = it
+            respone.points.add(PointsResponse.Point(lat, lon, respone.totalCount))
+        }.then(Mono.justOrEmpty(respone))
     }
 }
