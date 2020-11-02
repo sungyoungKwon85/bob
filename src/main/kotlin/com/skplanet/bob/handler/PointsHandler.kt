@@ -37,8 +37,7 @@ class PointsHandler(
                         serverRequest.queryParam("lat_bl").get().toDouble(),
                         serverRequest.queryParam("lon_bl").get().toDouble(),
                         serverRequest.queryParam("lat_tr").get().toDouble(),
-                        serverRequest.queryParam("lon_tr").get().toDouble(),
-                        serverRequest.queryParam("level").get().toInt())
+                        serverRequest.queryParam("lon_tr").get().toDouble())
                         .flatMap { ok().body(fromValue(it)) }
                         .switchIfEmpty(status(HttpStatus.NOT_FOUND).build())
                         .awaitFirst()
