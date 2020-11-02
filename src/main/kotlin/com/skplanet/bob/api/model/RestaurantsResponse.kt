@@ -4,5 +4,6 @@ import com.skplanet.bob.model.Restaurant
 
 data class RestaurantsResponse(
         var restaurants: MutableList<Restaurant> = ArrayList(),
-        var count: Int = 0
+        var count: Int = 0,
+        var totalCount: Int = 0
 )
