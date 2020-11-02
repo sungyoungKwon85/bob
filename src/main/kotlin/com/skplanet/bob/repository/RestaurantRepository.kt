@@ -49,5 +49,6 @@ class RestaurantRepository(private val template: ReactiveMongoTemplate) {
         return template.count(query, "restaurant")
     }
 
+
 }
 

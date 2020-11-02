@@ -3,6 +3,7 @@ package com.skplanet.bob.service
 import com.skplanet.bob.api.model.RestaurantsResponse
 import com.skplanet.bob.model.Restaurant
 import com.skplanet.bob.repository.RestaurantRepository
+import kotlinx.coroutines.reactive.awaitFirst
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.data.geo.Point
@@ -34,35 +35,25 @@ class RestaurantServiceImpl : RestaurantService {
         val trLat: Double = lat + latSize
         val tr = Point(trLon, trLat)
         val result = RestaurantsResponse()
+        val totalCount = restaurantRepository.getCountGeoWithinBySquare(bl, tr).awaitFirst()
         return restaurantRepository.getGeoWithinBySquare(bl, tr, pageable)
                 .doOnNext {
                     result.count++
                     result.restaurants.add(it)
+                    result.totalCount = totalCount.toInt()
                 }.then(Mono.just(result))
     }
 
     override suspend fun searchRestaurants(latBl: Double, lonBl: Double, latTr: Double, lonTr: Double, pageable: Pageable): Mono<RestaurantsResponse> {
         val result = RestaurantsResponse()
-        val latValue: Double = (latTr - latBl) / 3
-        val lonValue: Double = (lonTr - lonBl) / 3
-
-        // todo async.. occurs empty result
-        for (i in 0..2) {
-            for (j in 0..2) {
-                val blLat: Double = latBl + latValue * i
-                val blLon: Double = lonBl + lonValue * j
-                val bl = Point(blLon, blLat)
-                val trLat = latBl + latValue * (i + 1)
-                val trLon = lonBl + lonValue * (j + 1)
-                val tr = Point(trLon, trLat)
-                val restaurants = restaurantRepository.getGeoWithinBySquare(bl, tr, pageable)
-                restaurants.subscribe() {
+        val bl = Point(lonBl, latBl)
+        val tr = Point(lonTr, latTr)
+        val totalCount = restaurantRepository.getCountGeoWithinBySquare(bl, tr).awaitFirst()
+        return restaurantRepository.getGeoWithinBySquare(bl, tr, pageable)
+                .doOnNext {
                     result.count++
                     result.restaurants.add(it)
-                }
-            }
-        }
-
-        return Mono.just(result)
+                    result.totalCount = totalCount.toInt()
+                }.then(Mono.just(result))
     }
 }
