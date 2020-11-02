@@ -13,7 +13,7 @@ class PointsServiceImpl : PointsService {
     @Autowired
     lateinit var restaurantRepository: RestaurantRepository
 
-    override suspend fun getPointsByRange(latBl: Double, lonBl: Double, latTr: Double, lonTr: Double, level: Int): Mono<PointsResponse> {
+    override suspend fun getPointsByRange(latBl: Double, lonBl: Double, latTr: Double, lonTr: Double): Mono<PointsResponse> {
         val result = PointsResponse()
         val latValue: Double = (latTr - latBl) / 3
         val lonValue: Double = (lonTr - lonBl) / 3
