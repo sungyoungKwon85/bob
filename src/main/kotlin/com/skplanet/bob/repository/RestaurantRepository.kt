@@ -42,6 +42,13 @@ class RestaurantRepository(private val template: ReactiveMongoTemplate) {
         return template.find(query, Restaurant::class.java)
     }
 
+    fun getGeoWithinBySquare(bl: Point, tr: Point): Flux<Restaurant> {
+        val query = Query()
+        val box = Box(bl, tr)
+        query.addCriteria(Criteria.where("location").`within`(box))
+        return template.find(query, Restaurant::class.java)
+    }
+
     fun getCountGeoWithinBySquare(bl: Point, tr: Point): Mono<Long> {
         val query = Query()
         val box = Box(bl, tr)
