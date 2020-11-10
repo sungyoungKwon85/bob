@@ -10,5 +10,6 @@ interface RestaurantService {
     fun createRestaurant(restaurant: Mono<Restaurant>): Mono<Restaurant>
     fun getCountGeoWithin(lon: Double, lat: Double, distance: Double): Mono<Long>
     suspend fun searchRestaurants(lon: Double, lat: Double, level: Int, pageable: Pageable): Mono<RestaurantsResponse>
+    suspend fun searchRestaurants(pointId: String, pageable: Pageable): Mono<RestaurantsResponse>
     suspend fun searchRestaurants(latBl: Double, lonBl: Double, latTr: Double, lonTr: Double, pageable: Pageable): Mono<RestaurantsResponse>
 }

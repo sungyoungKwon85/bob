@@ -5,9 +5,12 @@ data class PointsResponse(
         var totalCount: Long = 0
 ) {
     data class Point(
-            var latitude: Double? = 0.0,
-            var longitude: Double? = 0.0,
-            var count: Long = 0,
-            var ids: List<String> = ArrayList()
+            var id: String,
+            var z: Int = 0,
+            var areaName: String = "",
+            var areaId: String = "",
+            var latitude: Double = 0.0,
+            var longitude: Double = 0.0,
+            var count: Int = 0
     )
 }

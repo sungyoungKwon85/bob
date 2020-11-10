@@ -38,11 +38,8 @@ class RestaurantHandler(
 
         return when (serverRequest.queryParam("type").orElse("")) {
             "point" -> {
-                val lon = serverRequest.queryParam("lon").get().toDouble()
-                val lat = serverRequest.queryParam("lat").get().toDouble()
-                val level = serverRequest.queryParam("level").get().toInt()
-
-                restaurantService.searchRestaurants(lon, lat, level, PageRequest.of(page, size))
+                val pointId = serverRequest.queryParam("pointId").get()
+                restaurantService.searchRestaurants(pointId, PageRequest.of(page, size))
                         .flatMap { ok().body(BodyInserters.fromValue(it)) }
                         .switchIfEmpty(status(HttpStatus.NOT_FOUND).build())
                         .awaitFirst()

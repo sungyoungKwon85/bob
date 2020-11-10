@@ -16,3 +16,7 @@ logging:
 naver:
   clientId: mv9agrezdc
   clientSecret: UyLTTU63LAddxCB3LPUJqAaAv60xrLJBw7vvYXJb
+
+spring:
+  profiles:
+    active: local

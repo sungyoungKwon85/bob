@@ -22,4 +22,17 @@ internal class RestaurantRepositoryTest {
                 }
                 .verifyComplete()
     }
+
+    @Test
+    fun getListByIds() {
+        val ids = listOf("5f97c7d9fefa7831e5dc05f1",
+                "5f97c7d9fefa7831e5dc05f3",
+                "5f97c7d9fefa7831e5dc05f4",
+                "5f97c7d9fefa7831e5dc05f5",
+                "5f97c7d9fefa7831e5dc05f6");
+        val listByIds = restaurantRepository.getListByIds(ids)
+        StepVerifier.create(listByIds)
+                .expectNextCount(5)
+                .verifyComplete()
+    }
 }

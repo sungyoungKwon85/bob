@@ -28,7 +28,7 @@ data class Restaurant(
 
     data class Location(
             var type: String = "",
-            var coordinates: List<Double>? = null
+            var coordinates: List<Double> = ArrayList()
     )
 
     data class Schedule(

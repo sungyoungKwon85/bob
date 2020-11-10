@@ -1,7 +1,6 @@
 package com.skplanet.bob.repository
 
 import com.skplanet.bob.model.Restaurant
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.geo.Box
 import org.springframework.data.geo.Circle
@@ -10,7 +9,6 @@ import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.findById
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
-import org.springframework.data.repository.support.PageableExecutionUtils
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -35,14 +33,14 @@ class RestaurantRepository(private val template: ReactiveMongoTemplate) {
         return template.count(query, "restaurant")
     }
 
-    fun getGeoWithinBySquare(bl: Point, tr: Point, pageable: Pageable): Flux<Restaurant> {
+    fun getListGeoWithinBySquare(bl: Point, tr: Point, pageable: Pageable): Flux<Restaurant> {
         val query = Query().with(pageable)
         val box = Box(bl, tr)
         query.addCriteria(Criteria.where("location").`within`(box))
         return template.find(query, Restaurant::class.java)
     }
 
-    fun getGeoWithinBySquare(bl: Point, tr: Point): Flux<Restaurant> {
+    fun getListGeoWithinBySquare(bl: Point, tr: Point): Flux<Restaurant> {
         val query = Query()
         val box = Box(bl, tr)
         query.addCriteria(Criteria.where("location").`within`(box))
@@ -54,6 +52,12 @@ class RestaurantRepository(private val template: ReactiveMongoTemplate) {
         val box = Box(bl, tr)
         query.addCriteria(Criteria.where("location").`within`(box))
         return template.count(query, "restaurant")
+    }
+
+    fun getListByIds(ids: List<String>): Flux<Restaurant> {
+        val query = Query()
+        query.addCriteria(Criteria.where("id").`in`(ids))
+        return template.find(query, Restaurant::class.java)
     }
 
 
