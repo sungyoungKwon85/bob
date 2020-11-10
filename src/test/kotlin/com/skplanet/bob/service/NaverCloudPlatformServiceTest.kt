@@ -1,8 +1,6 @@
 package com.skplanet.bob.service
 
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import reactor.test.StepVerifier
@@ -15,10 +13,19 @@ internal class NaverCloudPlatformServiceTest {
 
     @Test
     fun geocode() {
-//        val geocode = naverCloudPlatformService.geocode("모현읍")
-//        assertNotNull(geocode)
-//        assertNotNull(geocode?.addresses)
-//        assertNotNull(geocode?.addresses!![0])
-//        assertEquals(geocode?.addresses!![0].x, "127.2423688")
+        val geocode = naverCloudPlatformService.geocode("모현읍")
+        StepVerifier.create(geocode)
+                .assertNext {
+                    it.status == "OK"
+                }.expectComplete()
+    }
+
+    @Test
+    fun reverseGeocode() {
+        val reverseGeocode = naverCloudPlatformService.reverseGeocode(127.055413, 37.501192)
+        StepVerifier.create(reverseGeocode)
+                .assertNext {
+                    it.status.code == 0
+                }.expectComplete()
     }
 }

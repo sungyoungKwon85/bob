@@ -1,10 +1,10 @@
 package com.skplanet.bob.api.model
 
 data class NaverGeocodeResponse(
-        var status: String,
-        var meta: Meta,
+        var status: String = "",
+        var meta: Meta = Meta(),
         var addresses: List<Address> = ArrayList(),
-        var errorMessage: String
+        var errorMessage: String = ""
 ) {
     class Address {
         lateinit var roadAddress: String

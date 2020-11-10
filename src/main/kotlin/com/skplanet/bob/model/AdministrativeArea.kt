@@ -12,5 +12,6 @@ data class AdministrativeArea(
         var sdId: String = "",
         var sdName: String = "",
         var sggId: String = "",
-        var sggName: String = ""
+        var sggName: String = "",
+        var location: Restaurant.Location = Restaurant.Location()
 )
