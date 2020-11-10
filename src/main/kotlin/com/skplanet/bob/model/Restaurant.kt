@@ -6,14 +6,14 @@ import java.time.LocalTime
 
 @Document(collection = "restaurant")
 data class Restaurant(
-        var id: String?,
+        var id: String,
         var name: String = "",
-        var type: String? = "00",
-        var address: Address? = null,
-        var location: Location? = null,
+        var type: String = "00",
+        var address: Address = Address(),
+        var location: Location = Location(),
         var phone: String = "",
-        var schedule: Schedule? = null,
-        var updatedAt: LocalDateTime? = null,
+        var schedule: Schedule = Schedule(),
+        var updatedAt: LocalDateTime?,
         var registrationType: String = "UNBOB",
         var status: String = "CLOSED"
 
