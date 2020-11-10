@@ -31,13 +31,13 @@ class PointsServiceImpl : PointsService {
         val center = getCenter(lonBl, latBl, lonTr, latTr)
         val reverseGeocode = naverCloudPlatformService.reverseGeocode(center.x, center.y).awaitFirst()
         when (z) {
-            in 12..13 -> {
+            in 12..13 -> { // by sgg
                 val area2 = reverseGeocode.results[0].region.area2
                 result.center.areaName = area2.name
                 result.center.longitude = area2.coords.center.x
                 result.center.latitude = area2.coords.center.y
             }
-            else -> {
+            else -> { // by umd
                 val area3 = reverseGeocode.results[0].region.area3
                 result.center.areaName = area3.name
                 result.center.longitude = area3.coords.center.x
@@ -66,14 +66,18 @@ class PointsServiceImpl : PointsService {
     }
 
 
-    override suspend fun getPointsByUmdId(umdId: String): Mono<PointsResponse> {
+    override suspend fun getPointsByArea(sggId: String, umdId: String, z: Int): Mono<PointsResponse> {
         var result = PointsResponse()
         val area = administrativeAreaRepository.findByUmdId(umdId).awaitFirst()
         result.center.areaName = area.name
         result.center.longitude = area.location.coordinates[0]
         result.center.latitude = area.location.coordinates[1]
 
-        return pointRepository.findByZAndUmdId(14, umdId).doOnNext {
+        val areaId = when (z) {
+            in 12..13 -> sggId
+            else -> umdId
+        }
+        return pointRepository.findByZAndAreaId(z, areaId).doOnNext {
             result.totalCount += it.count
             result.points.add(PointsResponse.Point(
                     it.id,

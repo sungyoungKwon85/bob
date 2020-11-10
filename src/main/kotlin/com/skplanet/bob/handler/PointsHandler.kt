@@ -16,7 +16,10 @@ class PointsHandler(val pointsService: PointsService) {
     suspend fun getPointsBy(serverRequest: ServerRequest): ServerResponse {
         return when (serverRequest.queryParam("type").orElse("")) {
             "area" -> {
-                pointsService.getPointsByUmdId(serverRequest.queryParam("umdId").get())
+                pointsService.getPointsByArea(
+                        serverRequest.queryParam("sggId").get(),
+                        serverRequest.queryParam("umdId").get(),
+                        serverRequest.queryParam("z").get().toInt())
                         .flatMap { ok().body(fromValue(it)) }
                         .switchIfEmpty(status(HttpStatus.NOT_FOUND).build())
                         .awaitFirst()
