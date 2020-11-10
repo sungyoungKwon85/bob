@@ -36,5 +36,11 @@ class PointRepository(private val template: ReactiveMongoTemplate) {
         query.addCriteria(Criteria.where("z").`is`(z).and("areaId").`is`(areaId))
         return template.find(query, Point::class.java)
     }
+
+    fun findByZAndParentAreaId(z: Int, parentAreaId: String): Flux<Point> {
+        val query = Query()
+        query.addCriteria(Criteria.where("z").`is`(z).and("parentAreaId").`is`(parentAreaId))
+        return template.find(query, Point::class.java)
+    }
 }
 

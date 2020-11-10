@@ -12,6 +12,10 @@ data class Point(
         var areaName: String = "",
         @Indexed
         var areaId: String = "",
+        @Indexed
+        var parentAreaName: String = "",
+        @Indexed
+        var parentAreaId: String = "",
         var count: Int = 0,
         @Indexed
         var location: Restaurant.Location = Restaurant.Location(),

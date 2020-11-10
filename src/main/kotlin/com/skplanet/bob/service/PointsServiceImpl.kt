@@ -47,15 +47,7 @@ class PointsServiceImpl : PointsService {
 
         return pointRepository.findByZAndBox(Box(Point(lonBl, latBl), Point(lonTr, latTr)), z).doOnNext {
             result.totalCount += it.count
-            result.points.add(PointsResponse.Point(
-                    it.id,
-                    it.z,
-                    it.areaName,
-                    it.areaId,
-                    it.location.coordinates[1],
-                    it.location.coordinates[0],
-                    it.count
-            ))
+            result.points.add(buildPoint(it))
         }.then(Mono.justOrEmpty(result))
     }
 
@@ -73,20 +65,32 @@ class PointsServiceImpl : PointsService {
         result.center.longitude = area.location.coordinates[0]
         result.center.latitude = area.location.coordinates[1]
 
-        val areaId = when (z) {
-            in 12..13 -> sggId
-            else -> umdId
+        when (z) {
+            in 12..13 -> {
+                return pointRepository.findByZAndAreaId(z, sggId).doOnNext {
+                    result.totalCount += it.count
+                    result.points.add(buildPoint(it))
+                }.then(Mono.justOrEmpty(result))
+            }
+            else -> {
+                return pointRepository.findByZAndParentAreaId(z, sggId).doOnNext {
+                    result.totalCount += it.count
+                    result.points.add(buildPoint(it))
+                }.then(Mono.justOrEmpty(result))
+            }
         }
-        return pointRepository.findByZAndAreaId(z, areaId).doOnNext {
-            result.totalCount += it.count
-            result.points.add(PointsResponse.Point(
-                    it.id,
-                    it.z,
-                    it.areaName,
-                    it.areaId,
-                    it.location.coordinates[1],
-                    it.location.coordinates[0],
-                    it.count))
-        }.then(Mono.justOrEmpty(result))
+
+    }
+
+    private fun buildPoint(it: com.skplanet.bob.model.Point): PointsResponse.Point {
+        return PointsResponse.Point(
+                it.id,
+                it.z,
+                it.areaName,
+                it.areaId,
+                it.location.coordinates[1],
+                it.location.coordinates[0],
+                it.count
+        )
     }
 }
